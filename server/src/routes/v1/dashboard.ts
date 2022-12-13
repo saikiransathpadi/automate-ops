@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { testRoute } from "../../controller";
+import { createUser } from "../../controller";
 import { authenticatedRouter } from "../../middleware/auth";
 
 const dashboardRouter = Router();
 
 dashboardRouter
-  .route("/test/:id")
-  .get(authenticatedRouter, testRoute)
+  .route("/user")
+  .post(authenticatedRouter, createUser)
 
 export default dashboardRouter;

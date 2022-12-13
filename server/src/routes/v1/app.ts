@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { testRoute } from "../../controller";
+import { createUser } from "../../controller";
 import { authenticatedRouter } from "../../middleware/auth";
 
 const appRouter = Router();
 
 appRouter
-  .route("/test")
-  .get(authenticatedRouter, testRoute)
+  .route("/user")
+  .get(authenticatedRouter, createUser)
 
 export default appRouter;

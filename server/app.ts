@@ -1,23 +1,25 @@
+require('dotenv').config();
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import router from './src/routes/v1';
+import { mongooseConnect } from './src/dal/mongoose';
 
 const app = express();
 
+mongooseConnect();
 app.use(helmet());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/automate/ops/api/v1', router);
 app.get('/automate/ops/api/v1/health', (req, res) => {
-  res.send('Working!!');
+    res.send('Working!!');
 });
-
 
 const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
-  console.log(`The application is listening on port ${port}!`);
-  console.log('Node Environment-', process.env.NODE_ENV);
+    console.log(`The application is listening on port ${port}!`);
+    console.log('Node Environment-', process.env.NODE_ENV);
 });
