@@ -7,7 +7,6 @@ import { mongooseConnect } from './src/dal/mongoose';
 
 const app = express();
 
-mongooseConnect();
 app.use(helmet());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -19,7 +18,8 @@ app.get('/automate/ops/api/v1/health', (req, res) => {
 
 const port = process.env.PORT || 8080;
 
-app.listen(port, () => {
+app.listen(port, async () => {
+    await mongooseConnect()
     console.log(`The application is listening on port ${port}!`);
     console.log('Node Environment-', process.env.NODE_ENV);
 });

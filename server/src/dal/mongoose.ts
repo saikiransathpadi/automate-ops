@@ -5,8 +5,11 @@ console.log(mongoUri);
 
 export const mongooseConnect = async () => {
     mongoose.set('strictQuery', true);
-    mongoose.connect(mongoUri, (err) => {
-        if (err) console.log('error while connecting to mongodb', err);
-        else console.log('connected');
-    });
+    console.log('Connecting to MongoDb.....');
+    try {
+        await mongoose.connect(mongoUri, {});
+        console.log('connected to db')
+    } catch (err: any) {
+        console.error("Error while connecting to db", err.message)
+    }
 };
