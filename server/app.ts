@@ -3,7 +3,7 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import router from './src/routes/v1';
-import { mongooseConnect } from './src/dal/mongoose';
+import { mongooseConnect } from './src/db/mongoose';
 
 const app = express();
 

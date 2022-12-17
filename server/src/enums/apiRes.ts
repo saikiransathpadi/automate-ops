@@ -4,5 +4,5 @@ export enum STATUS_CODES {
     UNAUTHORIZED = 401,
     ACCEPTED = 202,
     SERVER_ERROR = 500,
-    NOT_FOUNT = 404,
+    NOT_FOUND = 404,
 }

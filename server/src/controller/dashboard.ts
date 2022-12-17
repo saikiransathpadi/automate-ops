@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { createUserDb } from '../dal/datalayer';
+import { createUserDb } from '../db/dal';
 import { STATUS_CODES } from '../enums';
-import { apiRes, dbRes } from '../interfaces/apiRes';
+import { apiRes, dbRes } from '../interfaces';
 
 export const createUser = async (req: Request, res: Response) => {
     console.table({
