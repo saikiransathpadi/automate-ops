@@ -6,3 +6,8 @@ export enum STATUS_CODES {
     SERVER_ERROR = 500,
     NOT_FOUND = 404,
 }
+
+export enum RESPONSE_MESSAGES {
+    UNAUTHORIZED = "User is not authorized with an explicit deny.",
+    SUCCESS = "SUCCESS",
+}
