@@ -1,11 +1,12 @@
 export interface apiRes {
-    result: any[] | Map<any, any> | number;
+    result: any[] | { [key: string]: any } | number;
     message: string;
     developer_message?: string;
+    error?: any;
 }
 
 export interface dbRes {
-    result: any[] | Map<any, any> | number;
+    result: any;
     error?: any;
     message?: string;
 }

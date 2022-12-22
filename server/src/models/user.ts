@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
-import { v4 as uuid4 } from 'uuid';
 import { ROLES } from '../enums';
+import { encryptPassword } from '../middleware/security';
 
 const userSchema = new Schema({
     id: {
@@ -9,7 +9,6 @@ const userSchema = new Schema({
         required: true,
         unique: true,
         immutable: true,
-        default: uuid4(),
     },
     email: {
         type: String,
@@ -22,6 +21,18 @@ const userSchema = new Schema({
         required: true,
         unique: true,
         trim: true,
+        minlength: 10,
+        maxlength: 10,
+    },
+    countryCode: {
+        type: String,
+        required: true,
+        trim: true,
+        default: '+91'
+    },
+    password: {
+        type: String,
+        required: true,
     },
     name: {
         type: String,
@@ -98,6 +109,19 @@ const userSchema = new Schema({
         type: Boolean,
         default: false,
     },
+});
+
+userSchema.pre('save', async function (next) {
+    const user: any = this;
+    console.log('asdf', user);
+    try {
+        // only hash the password if it has been modified (or is new)
+        if (!user.isModified('password')) return next();
+        user.password = await encryptPassword(user.password);
+        next();
+    } catch (error: any) {
+        return next(error);
+    }
 });
 
 export const User = mongoose.model('users', userSchema);

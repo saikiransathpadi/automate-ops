@@ -1,0 +1,26 @@
+paths:
+  /dashboard/user:                # path of the user from your endpoint
+    get:                 # endpoint request type (post request)
+      tags:               # Tag property
+        - User            # Value of the tag
+      summary: Get Users List
+      produces:
+      - application/json
+      responses:          # server responses
+        200:
+          description: An object with user details and ui messages
+        401:
+          description: Unauthorized
+        400:
+          description: Bad request
+        500:
+          description: Unexpected Error
+      security:
+        - Authorization: []
+
+securityDefinitions:
+  Authorization:
+    type: apiKey
+    name: authorization
+    in: header
+    description: Authentication token

@@ -1,0 +1,75 @@
+paths:
+  /dashboard/user/login:
+    post:
+      tags:
+        - Security
+      summary: user login
+      produces:
+      - application/json
+      parameters:         # request parameters
+      - in: body          # request body
+        name: login     # name of request, can be any name
+        description: It enables a user to login into account
+        required: true   # can also be true depending on user preference
+        schema:           # Schema definition
+          $ref: '#/definitions/logIn' 
+      responses:          # server responses
+        200:
+          description: An object with auth token and ui messages
+        401:
+          description: Unauthorized
+        400:
+          description: Bad request
+        500:
+          description: Unexpected Error
+  
+  /dashboard/user/signup:
+    post:
+      tags:
+        - Security
+      summary: user signup
+      produces:
+      - application/json
+      parameters:         # request parameters
+      - in: body          # request body
+        name: login     # name of request, can be any name
+        description: It enables a user to signup and create an accounr
+        required: true   # can also be true depending on user preference
+        schema:           # Schema definition
+          $ref: '#/definitions/signUp' 
+      responses:          # server responses
+        200:
+          description: An object with user details created and ui messages
+        401:
+          description: Unauthorized
+        400:
+          description: Bad request
+        500:
+          description: Unexpected Error
+      
+definitions:        # Schema defination for request body
+  signUp:
+    type: object
+    properties:
+      mobile:
+        type: string
+        required: true
+      email:
+        type: string
+        required: true
+      password:
+        type: string
+        required: true
+      name:
+        type: string
+        required: true
+  
+  logIn:
+    type: object
+    properties:
+      mobile:
+        type: string
+        required: true
+      password:
+        type: string
+        required: true

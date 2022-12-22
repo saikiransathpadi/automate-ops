@@ -34,3 +34,4 @@
 * prefer throwing an error rather than returning to avoid handling them. [`Link`](https://stackify.com/node-js-error-handling/)
 * Add logs in all cathces and respective requests for effective debugging.
 * Refer [`Link`](https://www.perfomatix.com/nodejs-coding-standards-and-best-practices/) for more best practices.
+* Whenever any new apis or api modification happen do the same in sawagger apis docs. Ref: [`Link`](https://swagger.io/docs/specification/adding-examples/)
