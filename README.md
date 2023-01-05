@@ -7,6 +7,7 @@
 * Always modularize and never write longer function, modularize them to be readable and maintainable.
 * Create respective type interfaces every where to avoid unnecessary errors.
 * Use **.d.ts for interface or type related files.
+* Always make sure the code is clean without any warnings.
 
 ## Client (React Best Practices)
 
