@@ -33,7 +33,7 @@ paths:
       parameters:         # request parameters
       - in: body          # request body
         name: login     # name of request, can be any name
-        description: It enables a user to signup and create an accounr
+        description: It enables a user to signup and create an account
         required: true   # can also be true depending on user preference
         schema:           # Schema definition
           $ref: '#/definitions/signUp' 
@@ -46,7 +46,148 @@ paths:
           description: Bad request
         500:
           description: Unexpected Error
-      
+  
+  /dashboard/otp/email:
+    put:
+      tags:
+        - OTP
+      summary: send otp to user
+      produces:
+      - application/json
+      parameters:         # request parameters
+      - in: body          # request body
+        name: send otp     # name of request, can be any name
+        description: sending otp to users email
+        required: true   # can also be true depending on user preference
+        schema:           # Schema definition
+          type: object
+          properties:
+            email:
+              type: string
+              required: true
+            source:
+              type: string
+              required: true
+      responses:          # server responses
+        200:
+          description: An object with otp id
+        401:
+          description: Unauthorized
+        400:
+          description: Bad request
+        500:
+          description: Unexpected Error
+
+    post:
+      tags:
+        - OTP
+      summary: validate otp
+      produces:
+      - application/json
+      parameters:         # request parameters
+      - in: body          # request body
+        name: validate otp     # name of request, can be any name
+        description: validating otp send to user
+        required: true   # can also be true depending on user preference
+        schema:           # Schema definition
+          type: object
+          properties:
+            email:
+              type: string
+              required: true
+            otpId:
+              type: string
+              required: true
+            otp:
+              oneOf:
+                - type: string
+                - type: integer
+              required: true
+      responses:          # server responses
+        200:
+          description: verification success
+        401:
+          description: Unauthorized
+        400:
+          description: Otp incorrect or expired
+        500:
+          description: Unexpected Error
+
+  /dashboard/user/forgot/password:
+    post:
+      tags:
+        - Security
+      summary: forgot password
+      produces:
+      - application/json
+      parameters:         # request parameters
+      - in: body          # request body
+        name: login     # name of request, can be any name
+        description: validates otp and updates new password
+        required: true   # can also be true depending on user preference
+        schema:           # Schema definition
+          type: object
+          properties:
+            email:
+              type: string
+              required: true
+            otpId:
+              type: string
+              required: true
+            otp:
+              oneOf:
+                - type: string
+                - type: integer
+              required: true
+            newPassword:
+              type: string
+              required: true
+      responses:          # server responses
+        200:
+          description: An object with user details created and ui messages
+        401:
+          description: Unauthorized
+        400:
+          description: Bad request
+        500:
+          description: Unexpected Error
+  
+  /dashboard/user/reset/password:
+    post:
+      tags:
+        - Security
+      summary: update password
+      produces:
+      - application/json
+      parameters:         # request parameters
+      - in: body          # request body
+        name: login     # name of request, can be any name
+        description: update password
+        required: true   # can also be true depending on user preference
+        schema:           # Schema definition
+          type: object
+          properties:
+            email:
+              type: string
+              required: true
+            password:
+              type: string
+              required: true
+            newPassword:
+              type: string
+              required: true
+      responses:          # server responses
+        200:
+          description: update successful
+        401:
+          description: Unauthorized
+        400:
+          description: Incorrect or invalid password
+        500:
+          description: Unexpected Error
+      security:
+        - Authorization: []
+   
 definitions:        # Schema defination for request body
   signUp:
     type: object
@@ -76,3 +217,10 @@ definitions:        # Schema defination for request body
       password:
         type: string
         required: true
+
+securityDefinitions:
+  Authorization:
+    type: apiKey
+    name: authorization
+    in: header
+    description: Authentication token

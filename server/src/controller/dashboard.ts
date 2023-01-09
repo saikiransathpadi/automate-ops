@@ -5,7 +5,7 @@ import { apiRes, dbRes, validateOtpRes } from '../interfaces';
 import { generateJwtToken } from '../middleware/auth';
 import { comparePassword } from '../middleware/security';
 import { sendEmail } from '../utils/email';
-import { EMAIL_SUBJECTS, generateOtpSixDigit, OtpEmailTemplate } from '../utils/helper';
+import { EMAIL_SUBJECTS, generateOtpSixDigit, getOtpEmailTemplateBySource } from '../utils/helper';
 import { validateAndUpdateOtpLogsBLL } from './securityBLL';
 
 export const createUser = async (req: Request, res: Response) => {
@@ -112,7 +112,7 @@ export const udpatePasswordReset = async (req: Request, res: Response) => {
     try {
         const { body } = req;
         if (!body.userId || !body.password || !body.newPassword) {
-            throw new Error('current password and new password are required ');
+            throw new Error('user details or current password and new password are required ');
         }
         const resp: dbRes = await updatePasswordDb({ id: body.userId }, body.newPassword);
         return res.status(STATUS_CODES.SUCCESS).json({
@@ -136,7 +136,7 @@ export const sendOtpForEmailVerification = async (req: Request, res: Response) =
         const {email: resourceId, source: requestSource} = body
         const [otpResp]: any = await Promise.all([
             saveOtpDb({ otp, resourceId, requestSource }),
-            sendEmail(resourceId, EMAIL_SUBJECTS.OPT_VERIFICATION_SUBJECT, OtpEmailTemplate(otp)),
+            sendEmail(resourceId, EMAIL_SUBJECTS.OPT_VERIFICATION_SUBJECT, getOtpEmailTemplateBySource(requestSource, otp)),
         ]);
         return res.status(STATUS_CODES.SUCCESS).json({
             message: 'Success',
