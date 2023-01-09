@@ -26,7 +26,7 @@ export const getUsersDb = async (params: { [key: string]: any }): Promise<dbRes>
     const limit = params.limit || 10;
     const skip = params.offset || 0;
     try {
-        const resp: any = await User.find({}, {password: 0}, { limit, skip });
+        const resp: any = await User.find({}, { password: 0 }, { limit, skip });
         defaultResp.result = resp;
     } catch (err: any) {
         console.log(JSON.parse(JSON.stringify(err)), err.stack);
@@ -41,6 +41,23 @@ export const getUserByMobile = async (mobile: Number): Promise<dbRes> => {
     };
     try {
         const resp: any = await User.find({ mobile });
+        if (!resp.length) {
+            throw new ServiceException(STATUS_CODES.BAD_REQUEST, 'User Not found, Please SignUp');
+        }
+        defaultResp.result = resp[0];
+    } catch (err: any) {
+        console.log(JSON.parse(JSON.stringify(err)), err.stack);
+        throw new ServiceException(STATUS_CODES.BAD_REQUEST, err.message, err);
+    }
+    return defaultResp;
+};
+
+export const getUserByFilters = async (filters: { [key: string]: any }): Promise<dbRes> => {
+    const defaultResp: dbRes = {
+        result: null,
+    };
+    try {
+        const resp: any = await User.find(filters);
         if (!resp.length) {
             throw new ServiceException(STATUS_CODES.BAD_REQUEST, 'User Not found, Please SignUp');
         }

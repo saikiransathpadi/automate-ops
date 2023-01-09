@@ -34,7 +34,12 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
-    name: {
+    firstName: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    lastName: {
         type: String,
         required: true,
         trim: true,
@@ -64,7 +69,7 @@ const userSchema = new Schema({
     },
     isActive: {
         type: Boolean,
-        default: false,
+        default: true,
         required: true,
     },
     createdOn: {
@@ -111,13 +116,28 @@ const userSchema = new Schema({
     },
 });
 
+// hashing the password while saving the user
 userSchema.pre('save', async function (next) {
     const user: any = this;
-    console.log('asdf', user);
+
     try {
         // only hash the password if it has been modified (or is new)
         if (!user.isModified('password')) return next();
         user.password = await encryptPassword(user.password);
+        next();
+    } catch (error: any) {
+        return next(error);
+    }
+});
+
+// hashing the password while updating the user
+userSchema.pre('updateOne', async function (next) {
+    const user: any = this;
+
+    try {
+        // only hash the password if it has been modified (or is new)
+        if (!user._update.password) return next();
+        user._update.password = await encryptPassword(user._update.password);
         next();
     } catch (error: any) {
         return next(error);
