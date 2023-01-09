@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
-import { createUserDb, getUserByMobile, getUsersDb } from '../db/dal';
+import { createUserDb, getUserByMobile, getUsersDb, saveOtpDb, updatePasswordDb } from '../db/dal';
 import { STATUS_CODES } from '../enums';
-import { apiRes, dbRes } from '../interfaces';
+import { apiRes, dbRes, validateOtpRes } from '../interfaces';
 import { generateJwtToken } from '../middleware/auth';
 import { comparePassword } from '../middleware/security';
+import { sendEmail } from '../utils/email';
+import { EMAIL_SUBJECTS, generateOtpSixDigit, OtpEmailTemplate } from '../utils/helper';
+import { validateAndUpdateOtpLogsBLL } from './securityBLL';
 
 export const createUser = async (req: Request, res: Response) => {
     console.log(
@@ -94,6 +97,88 @@ export const userLogIn = async (req: Request, res: Response) => {
             message: 'Success',
             result: isCorrectPassword,
             token: await generateJwtToken({ user_id: userData.result.id, mobile: userData.result.mobile }),
+        });
+    } catch (error: any) {
+        console.log(error);
+        return res.status(error.statusCode || STATUS_CODES.SERVER_ERROR).json({
+            error,
+            message: error.message,
+            developer_message: error.error ? error.error.message : error.message,
+        });
+    }
+};
+
+export const udpatePasswordReset = async (req: Request, res: Response) => {
+    try {
+        const { body } = req;
+        if (!body.userId || !body.password || !body.newPassword) {
+            throw new Error('current password and new password are required ');
+        }
+        const resp: dbRes = await updatePasswordDb({ id: body.userId }, body.newPassword);
+        return res.status(STATUS_CODES.SUCCESS).json({
+            message: 'Success',
+            result: resp,
+        });
+    } catch (error: any) {
+        console.log(error);
+        return res.status(error.statusCode || STATUS_CODES.SERVER_ERROR).json({
+            error,
+            message: error.message,
+            developer_message: error.error ? error.error.message : error.message,
+        });
+    }
+};
+
+export const sendOtpForEmailVerification = async (req: Request, res: Response) => {
+    try {
+        const { body } = req;
+        const otp = generateOtpSixDigit();
+        const {email: resourceId, source: requestSource} = body
+        const [otpResp]: any = await Promise.all([
+            saveOtpDb({ otp, resourceId, requestSource }),
+            sendEmail(resourceId, EMAIL_SUBJECTS.OPT_VERIFICATION_SUBJECT, OtpEmailTemplate(otp)),
+        ]);
+        return res.status(STATUS_CODES.SUCCESS).json({
+            message: 'Success',
+            result: { otpId: otpResp.result.id },
+        });
+    } catch (error: any) {
+        console.log(error);
+        return res.status(error.statusCode || STATUS_CODES.SERVER_ERROR).json({
+            error,
+            message: error.message,
+            developer_message: error.error ? error.error.message : error.message,
+        });
+    }
+};
+
+export const validateAndUpdateOtpLogs = async (req: Request, res: Response) => {
+    try {
+        const { body } = req;
+        const { isValid, message }: validateOtpRes = await validateAndUpdateOtpLogsBLL(body);
+        return res.status(STATUS_CODES.SUCCESS).json({
+            result: {
+                isValid,
+                message,
+            },
+        });
+    } catch (error: any) {
+        console.log(error);
+        return res.status(error.statusCode || STATUS_CODES.SERVER_ERROR).json({
+            error,
+            message: error.message,
+            developer_message: error.developer_message || error.message,
+        });
+    }
+};
+
+export const UpdatePasswordForgot = async (req: Request, res: Response) => {
+    try {
+        const { body } = req;
+        const resp: dbRes = await updatePasswordDb({ email: body.email }, body.newPassword);
+        return res.status(STATUS_CODES.SUCCESS).json({
+            message: 'Success',
+            result: resp,
         });
     } catch (error: any) {
         console.log(error);

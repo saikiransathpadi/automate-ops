@@ -5,10 +5,17 @@ import { getUserByMobile } from '../db/dal';
 const SECRET = process.env.SECRET;
 
 export const authenticatedRouter = async (req: Request, res: Response, next: NextFunction) => {
+    if (process.env.NO_AUTH === 'true') {
+        next();
+        return;
+    }
     console.log('Auth Validation.......');
     try {
         const accessTokenFromClient: string = req.header('authorization');
-        if (!accessTokenFromClient) return res.status(STATUS_CODES.UNAUTHORIZED).json({ message: RESPONSE_MESSAGES.UNAUTHORIZED });
+        if (!accessTokenFromClient)
+            return res
+                .status(STATUS_CODES.UNAUTHORIZED)
+                .json({ message: RESPONSE_MESSAGES.UNAUTHORIZED, developer_message: RESPONSE_MESSAGES.TOKEN_MISSING });
 
         const data: any = verify(accessTokenFromClient, SECRET, { algorithms: [AUTH.TOKEN_ALGORITHM] });
         await getUserByMobile(data.mobile);

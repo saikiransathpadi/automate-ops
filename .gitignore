@@ -29,3 +29,4 @@ Thumbs.db
 *.wmv
 
 .eslintcache
+**/yarn.lock

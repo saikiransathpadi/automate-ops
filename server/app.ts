@@ -6,6 +6,7 @@ import router from './src/routes/v1';
 import { mongooseConnect } from './src/db/mongoose';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc';
+import { COMPANY } from './src/utils/helper';
 const app = express();
 
 app.use(helmet());
@@ -14,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 const swaggerDefinition = {
     info: {
-        title: 'Automate Ops',
+        title: COMPANY,
         version: '1.0.0',
         description: 'Automating Manual Operations',
     },

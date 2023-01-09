@@ -60,7 +60,10 @@ definitions:        # Schema defination for request body
       password:
         type: string
         required: true
-      name:
+      firstName:
+        type: string
+        required: true
+      lastName:
         type: string
         required: true
   
