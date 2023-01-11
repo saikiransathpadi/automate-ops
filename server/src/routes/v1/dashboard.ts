@@ -20,7 +20,9 @@ dashboardRouter.route('/user/signup').post(signUpValidation, userSignUp);
 dashboardRouter.route('/user/login').post(userLogIn);
 
 dashboardRouter.route('/user/forgot/password').post(newPasswordValidation, validateAndUpdateOtpLogsMiddleware, UpdatePasswordForgot);
-dashboardRouter.route('/user/reset/password').post(authenticatedRouter, validateCurrentPassword, newPasswordValidation, udpatePasswordReset);
+dashboardRouter
+    .route('/user/reset/password')
+    .post(authenticatedRouter, validateCurrentPassword, newPasswordValidation, udpatePasswordReset);
 
 dashboardRouter.route('/otp/email').put(sendOtpForEmailVerification).post(validateAndUpdateOtpLogs);
 
