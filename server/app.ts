@@ -39,6 +39,8 @@ app.get('/automate/ops/api/v1/health', (req, res) => {
     res.send('Working!!');
 });
 
+console.log('Is running on docker', process.env.local)
+
 app.use(function (req, res) {
     console.log(req);
     return res.status(404).json({

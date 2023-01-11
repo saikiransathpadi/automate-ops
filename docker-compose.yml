@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  api:
+    image: backend_api_node_ops
+    container_name: backend_ops
+    restart: always
+    build:
+      context: server
+    volumes:
+      - ./server:/home/node/app
+    ports:
+      - 8080:8080
+    environment:
+      - local=1
+    networks:
+      - automate_ops_network
+
+  ui:
+    image: frontend_next_ops
+    container_name: frontend_ops
+    restart: always
+    build:
+      context: client
+    volumes:
+      - ./client:/home/react/app
+    ports:
+      - 3000:3000
+    networks:
+      - automate_ops_network
+
+networks:
+  automate_ops_network:
