@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const mongoUri = `mongodb://${process.env.MONGODB_SERVER}${process.env.DB_NAME}`;
+const mongoUri = `mongodb://${process.env.local ? 'host.docker.internal:27017/' : process.env.MONGODB_SERVER}${process.env.DB_NAME}`;
 console.log(mongoUri);
 
 export const mongooseConnect = async () => {
@@ -8,8 +8,8 @@ export const mongooseConnect = async () => {
     console.log('Connecting to MongoDb.....');
     try {
         await mongoose.connect(mongoUri, {});
-        console.log('connected to db')
+        console.log('connected to db');
     } catch (err: any) {
-        console.error("Error while connecting to db", err.message)
+        console.error('Error while connecting to db', err.message);
     }
 };
