@@ -29,5 +29,13 @@ services:
     networks:
       - automate_ops_network
 
+  database_mongo:
+    container_name: database_ops
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    networks:
+      - automate_ops_network
+
 networks:
   automate_ops_network:
