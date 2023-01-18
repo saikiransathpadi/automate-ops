@@ -28,7 +28,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
         trim: true,
-        default: '+91'
+        default: '+91',
     },
     password: {
         type: String,
@@ -98,7 +98,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
         enum: ROLES,
-        default: 'Manager',
+        default: ROLES.MANAGER,
     },
     permissions: {
         type: Array<String>,

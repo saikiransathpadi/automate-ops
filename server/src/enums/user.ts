@@ -1,6 +1,6 @@
 export enum ROLES {
-    SUPER_ADMIN = 'SuperAdmin',
-    MANAGER = 'Manager',
-    OPS_TEAM = 'OpsTeam',
-    MENTOR = 'OpsTeam',
+    SUPER_ADMIN = 'superAdmin',
+    MANAGER = 'manager',
+    OPS_TEAM = 'opsTeam',
+    MENTOR = 'mentor',
 }

@@ -18,9 +18,9 @@ export const comparePassword = async (password: string, hashPassword: string): P
 export const validateCurrentPassword = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userData: dbRes = await getUserByFilters({ userId: req.body.userId });
-        console.log('users data', userData)
+        console.log('users data', userData);
         const isCorrectPassword: boolean = await comparePassword(req.body.password, userData.result.password);
-        console.log('validating current pass =>', isCorrectPassword)
+        console.log('validating current pass =>', isCorrectPassword);
         if (!isCorrectPassword) {
             return res.status(400).json({
                 message: "Current password doesn't match",

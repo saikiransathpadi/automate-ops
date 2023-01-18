@@ -19,6 +19,6 @@ const validators = {
 export const validateField = (field: string, value: string) => {
     const validator = validators[field];
     if (!validator(value)) {
-        throw new ServiceException(STATUS_CODES.BAD_REQUEST, `Invalid ${field}. ${VALIDATION_MESSAGES[field] || ""}`);
+        throw new ServiceException(STATUS_CODES.BAD_REQUEST, `Invalid ${field}. ${VALIDATION_MESSAGES[field] || ''}`);
     }
 };

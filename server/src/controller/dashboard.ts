@@ -133,7 +133,7 @@ export const sendOtpForEmailVerification = async (req: Request, res: Response) =
     try {
         const { body } = req;
         const otp = generateOtpSixDigit();
-        const {email: resourceId, source: requestSource} = body
+        const { email: resourceId, source: requestSource } = body;
         const [otpResp]: any = await Promise.all([
             saveOtpDb({ otp, resourceId, requestSource }),
             sendEmail(resourceId, EMAIL_SUBJECTS.OPT_VERIFICATION_SUBJECT, getOtpEmailTemplateBySource(requestSource, otp)),

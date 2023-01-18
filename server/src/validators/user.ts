@@ -25,7 +25,7 @@ export const signUpValidation = (req: Request, res: Response, next: NextFunction
 export const validateAndUpdateOtpLogsMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         await validateAndUpdateOtpLogsBLL(req.body);
-        next()
+        next();
     } catch (error: any) {
         console.log(error);
         return res.status(error.statusCode || STATUS_CODES.SERVER_ERROR).json({
@@ -39,11 +39,8 @@ export const validateAndUpdateOtpLogsMiddleware = async (req: Request, res: Resp
 export const newPasswordValidation = (req: Request, res: Response, next: NextFunction) => {
     try {
         const { body } = req;
-        validateFieldsArr.forEach((field) => {
-            body[field] && validateField(field, body[field]);
-        });
-        validateField('password', body.newPassword)
-        console.log('new password validated')
+        validateField('password', body.newPassword);
+        console.log('new password validated');
         next();
     } catch (error: any) {
         console.log(error);
