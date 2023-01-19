@@ -4,6 +4,7 @@ import {
     sendOtpForEmailVerification,
     udpatePasswordReset,
     UpdatePasswordForgot,
+    updateUser,
     userLogIn,
     userSignUp,
     validateAndUpdateOtpLogs,
@@ -15,6 +16,7 @@ import { newPasswordValidation, signUpValidation, validateAndUpdateOtpLogsMiddle
 const dashboardRouter = Router();
 
 dashboardRouter.route('/user').get(authenticatedRouter, getUsers);
+dashboardRouter.route('/user/:userId').put(authenticatedRouter, signUpValidation, updateUser);
 
 dashboardRouter.route('/user/signup').post(signUpValidation, userSignUp);
 dashboardRouter.route('/user/login').post(userLogIn);

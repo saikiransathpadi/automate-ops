@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createUserDb, getUserByMobile, getUsersDb, saveOtpDb, updatePasswordDb } from '../db/dal';
+import { createUserDb, getUserByMobile, getUsersDb, saveOtpDb, updatePasswordDb, updateUserByQueryDb } from '../db/dal';
 import { STATUS_CODES } from '../enums';
 import { apiRes, dbRes, validateOtpRes } from '../interfaces';
 import { generateJwtToken } from '../middleware/auth';
@@ -93,10 +93,14 @@ export const userLogIn = async (req: Request, res: Response) => {
                 message: 'Incorrect Password',
             });
         }
+        const [token] = await Promise.all([
+            generateJwtToken({ user_id: userData.result.id, mobile: userData.result.mobile }),
+            updateUserByQueryDb({ lastLogin: new Date() }, { mobile: body.mobile }),
+        ]);
         return res.status(STATUS_CODES.SUCCESS).json({
             message: 'Success',
             result: isCorrectPassword,
-            token: await generateJwtToken({ user_id: userData.result.id, mobile: userData.result.mobile }),
+            token,
         });
     } catch (error: any) {
         console.log(error);
@@ -156,6 +160,9 @@ export const validateAndUpdateOtpLogs = async (req: Request, res: Response) => {
     try {
         const { body } = req;
         const { isValid, message }: validateOtpRes = await validateAndUpdateOtpLogsBLL(body);
+        if (isValid) {
+            await updateUserByQueryDb({ isEmailVerified: true }, { email: body.email });
+        }
         return res.status(STATUS_CODES.SUCCESS).json({
             result: {
                 isValid,
@@ -179,6 +186,27 @@ export const UpdatePasswordForgot = async (req: Request, res: Response) => {
         return res.status(STATUS_CODES.SUCCESS).json({
             message: 'Success',
             result: resp,
+        });
+    } catch (error: any) {
+        console.log(error);
+        return res.status(error.statusCode || STATUS_CODES.SERVER_ERROR).json({
+            error,
+            message: error.message,
+            developer_message: error.error ? error.error.message : error.message,
+        });
+    }
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+    try {
+        const {
+            body,
+            params: { userId },
+        } = req;
+        const resp: dbRes = await updateUserByQueryDb(body, { id: userId });
+        return res.status(STATUS_CODES.SUCCESS).json({
+            message: 'Success',
+            result: resp.result,
         });
     } catch (error: any) {
         console.log(error);
