@@ -68,3 +68,21 @@ export const getUserByFilters = async (filters: { [key: string]: any }): Promise
     }
     return defaultResp;
 };
+
+export const updateUserByQueryDb = async (body: { [key: string]: any }, query: { [key: string]: any }): Promise<dbRes> => {
+    const defaultResp: dbRes = {
+        result: null,
+    };
+    try {
+        delete body.password;
+        if (body.email) {
+            body.isEmailVerified = false;
+        }
+        const resp: any = await User.updateOne(query, body);
+        defaultResp.result = resp;
+    } catch (err: any) {
+        console.log(JSON.parse(JSON.stringify(err)), err.stack);
+        throw new ServiceException(STATUS_CODES.BAD_REQUEST, err.message, err);
+    }
+    return defaultResp;
+};
