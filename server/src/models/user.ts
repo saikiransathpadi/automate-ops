@@ -3,6 +3,11 @@ const { Schema } = mongoose;
 import { ROLES } from '../enums';
 import { encryptPassword } from '../middleware/security';
 
+const docSchema = new Schema({
+    docType: String,
+    docLink: String,
+});
+
 const userSchema = new Schema({
     id: {
         type: String,
@@ -48,12 +53,7 @@ const userSchema = new Schema({
     githubHubProfile: String,
     profileImage: String,
     documents: {
-        type: [
-            {
-                type: String,
-                link: String,
-            },
-        ],
+        type: [docSchema],
     },
     isDocumentsVerified: {
         type: Boolean,
