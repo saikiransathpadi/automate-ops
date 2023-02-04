@@ -25,6 +25,7 @@ export const signUpValidation = (req: Request, res: Response, next: NextFunction
 export const validateAndUpdateOtpLogsMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         await validateAndUpdateOtpLogsBLL(req.body);
+        req.body.isEmailVerified = true;
         next();
     } catch (error: any) {
         console.log(error);
