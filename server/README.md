@@ -10,7 +10,7 @@
 ### Installation
 
 1. `cd automate_ops/server` to go into the project root
-2.  `yarn install` to install the node dependencies 
+2. `yarn install` to install the node dependencies 
 
 ### Running locally
 
